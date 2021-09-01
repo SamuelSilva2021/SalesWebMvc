@@ -44,6 +44,31 @@ namespace SalesWebMvc.Controllers
             //Redirecionar a ação para pagina Index
             return RedirectToAction(nameof(Index));
         }
-       
+        //Criar a confirmação para o Delete (?)-> quer dizer opcional
+        //Esse método trás a tela de confirmação para o delete, porém ainda não deleta. Abaixo está implementado o delete com o POST
+        public IActionResult Delete(int? id)
+        {
+            //Primeiro testar se o Id é null
+            if (id == null)
+            {
+                return NotFound();
+            }
+            //Testar se o Id da lista FindById é null
+            var obj = _sellerService.FindById(id.Value);
+            if (id == null)
+            {
+                return NotFound();
+            }
+            //Se não for null
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _sellerService.Remove(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
