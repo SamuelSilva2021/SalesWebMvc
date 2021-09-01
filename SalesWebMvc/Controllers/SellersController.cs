@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using SalesWebMvc.Models;
 using SalesWebMvc.Services;
 
 namespace SalesWebMvc.Controllers
@@ -20,5 +17,23 @@ namespace SalesWebMvc.Controllers
             var list = _sellerService.FindAll();
             return View(list);
         }
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        //Anotation do tipo de requisição
+        [HttpPost]
+        //Validação para previnir contra ataque CSRF
+        [ValidateAntiForgeryToken]
+        //Criar um POST
+        public IActionResult Create(Seller seller)
+        {
+            //chama o método _sellerService.Insert
+            _sellerService.Insert(seller);
+            //Redirecionar a ação para pagina Index
+            return RedirectToAction(nameof(Index));
+        }
+       
     }
 }
