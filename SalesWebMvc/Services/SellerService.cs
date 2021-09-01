@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SalesWebMvc.Models;
 using Microsoft.EntityFrameworkCore;
+using SalesWebMvc.Services.Exceptions;
 
 namespace SalesWebMvc.Services
 {
@@ -42,6 +43,26 @@ namespace SalesWebMvc.Services
             var obj =_context.Seller.Find(id);
             _context.Seller.Remove(obj);
             _context.SaveChanges();
+        }
+        public void Update(Seller obj)
+        {
+            //Testar se o Id do obj já existe no banco
+            //Se não existir (!) então lançar uma exception
+            if (!_context.Seller.Any(x => x.Id == obj.Id))
+            {
+                throw new NotFoundException("Id não existe");
+            }
+            try 
+            { 
+            _context.Update(obj);
+            _context.SaveChanges();
+            }
+            //Interceptar uma exceção de acesso a dados
+            catch(DbConcurrencyException e)
+            {
+                //Relaçar a excessão em nível de serviço
+                throw new DbConcurrencyException(e.Message);
+            }
         }
 
     }
