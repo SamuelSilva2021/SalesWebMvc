@@ -48,18 +48,18 @@ namespace SalesWebMvc.Controllers
         //Esse método trás a tela de confirmação para o delete, porém ainda não deleta. Abaixo está implementado o delete com o POST
         public IActionResult Delete(int? id)
         {
-            //Primeiro testar se o Id é null
+            //Veririficar se o Id é null
             if (id == null)
             {
                 return NotFound();
             }
-            //Testar se o Id da lista FindById é null
+            //Buscar o obj pelo Id
             var obj = _sellerService.FindById(id.Value);
             if (id == null)
             {
                 return NotFound();
             }
-            //Se não for null
+            //Retornar o obj
             return View(obj);
         }
 
@@ -69,6 +69,19 @@ namespace SalesWebMvc.Controllers
         {
             _sellerService.Remove(id);
             return RedirectToAction(nameof(Index));
+        }
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var obj = _sellerService.FindById(id.Value);
+            if (id == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
         }
     }
 }
