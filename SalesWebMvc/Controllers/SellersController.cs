@@ -43,6 +43,12 @@ namespace SalesWebMvc.Controllers
         //Criar um POST
         public IActionResult Create(Seller seller)
         {
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
             //chama o método _sellerService.Insert
             _sellerService.Insert(seller);
             //Redirecionar a ação para pagina Index
@@ -89,6 +95,7 @@ namespace SalesWebMvc.Controllers
         }
         public IActionResult Edit(int? id)
         {
+
             if(id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not provided" });
@@ -108,9 +115,15 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller)
         {
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
             //Comparar se o id do departamento é o mesmo id departamento que contém no vendedor selecionado
             //Se for diferente retorna um BadRequest
-            if(id != seller.Id)
+            if (id != seller.Id)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
             }

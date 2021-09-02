@@ -12,20 +12,32 @@ namespace SalesWebMvc.Models
 
         //Customizar o que vai aparecer no Display(Cabeçalho do formulário) lá na página da Web, usar o anotation [Display]
         [Display(Name = "Nome")]
+        //Anotation para requerer o digitação do nome
+        [Required(ErrorMessage = "Preencha o {0} ")]
+        [StringLength(60, MinimumLength = 3, ErrorMessage ="O nome precisa ter entre {2} e {1} caracteres")]
         public string Name { get; set; }
+
         [Display(Name = "E-mail")]
         [DataType(DataType.EmailAddress)]
+        [Required(ErrorMessage = "Preencha o {0} ")]
+        [EmailAddress(ErrorMessage = "Entre com um {0} Valido")]
         public string Email { get; set; }
+
         [Display (Name = "Data de Universário")]
         //Usar o anotation DataType pra formatar a data
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString ="{0:dd/MM/yyyy}")]
+        [Required(ErrorMessage = "Preencha o {0} ")]
         public DateTime BirthDate { get; set; }
+
         [Display(Name = "Salário Base")]
         [DisplayFormat(DataFormatString = "{0:F2}")]
+        [Required(ErrorMessage = "Preencha o {0} ")]
         public double Salary { get; set; }
+
         [Display(Name = "Departamento")]
         public Department Department { get; set; }
+
         public int DepartmentId { get; set; }
         public ICollection<SalesRecord> Sales { get; set; } = new List<SalesRecord>();
 
