@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using SalesWebMvc.Models;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Services.Exceptions;
+using System.Threading.Tasks;
 
 namespace SalesWebMvc.Services
 {
@@ -18,44 +18,45 @@ namespace SalesWebMvc.Services
         }
 
         //Método para listar vendedores no banco de dados
-        public List<Seller> FindAll()
+        public async Task <List<Seller>> FindAllAsync()
         {
-            return _context.Seller.ToList();
+            return await _context.Seller.ToListAsync();
         }
         //Método para inserir um novo vendedor
-        public void Insert(Seller obj)
+        public async Task InsertAsync(Seller obj)
         {
             //Adiciona o obj(vendedor/seller)
             _context.Add(obj);
             //Para confirmar usar o método SaveChanges
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
         }
         //Método para buscar um vendedor pelo Id
-        public Seller FindById(int id)
+        public async Task <Seller> FindByIdAsync(int id)
         {
             //Carregar o departamento e o vendedor pelo Id
-            return _context.Seller.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id);
+            return await _context.Seller.Include(obj => obj.Department).FirstOrDefaultAsync(obj => obj.Id == id);
 
         }
         //Método para deletar um vendedor
-        public void Remove(int id)
+        public async Task RemoveAsync(int id)
         {
-            var obj =_context.Seller.Find(id);
+            var obj = await _context.Seller.FindAsync(id);
             _context.Seller.Remove(obj);
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
         }
-        public void Update(Seller obj)
+        public async Task UpdateAsync(Seller obj)
         {
             //Testar se o Id do obj já existe no banco
             //Se não existir (!) então lançar uma exception
-            if (!_context.Seller.Any(x => x.Id == obj.Id))
+            bool hasAny =await _context.Seller.AnyAsync(x => x.Id == obj.Id);
+            if (!hasAny)
             {
                 throw new NotFoundException("Id não existe");
             }
             try 
             { 
             _context.Update(obj);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             }
             //Interceptar uma exceção de acesso a dados
             catch(DbConcurrencyException e)
