@@ -81,7 +81,7 @@ namespace SalesWebMvc.Controllers
                 return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
             var obj = _sellerService.FindById(id.Value);
-            if (obj == null)
+            if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
